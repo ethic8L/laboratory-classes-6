@@ -14,30 +14,30 @@ const cartController = require("./controllers/cartController");
 
 const app = express();
 
-// Konfiguracja silnika widoków
+
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views")); // bezpieczna ścieżka absolutna
+app.set("views", path.join(__dirname, "views")); 
 
-// Statyczne pliki (CSS, obrazy itd.)
-app.use(express.static(path.join(__dirname, "public"))); // bezpieczna ścieżka absolutna
 
-// Parsowanie formularzy
+app.use(express.static(path.join(__dirname, "public"))); 
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Logger middleware
+
 app.use((request, _response, next) => {
   const { url, method } = request;
   logger.getInfoLog(url, method);
   next();
 });
 
-// Routing
+
 app.use("/products", productsRoutes);
 app.use("/logout", logoutRoutes);
 app.use("/kill", killRoutes);
 app.use(homeRoutes);
 
-// Obsługa błędów 404
+
 app.use((request, response) => {
   const { url } = request;
   const cartCount = cartController.getProductsCount();
@@ -52,7 +52,7 @@ app.use((request, response) => {
   logger.getErrorLog(url);
 });
 
-// Uruchomienie serwera
+
 app.listen(PORT, () => {
   console.log(`Serwer działa na http://localhost:${PORT}`);
 });
