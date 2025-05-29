@@ -15,14 +15,18 @@ function createWindow() {
     }
   });
 
+  mainWindow.webContents.openDevTools(); 
+
   const loadApp = () => {
     mainWindow.loadURL('http://localhost:3000');
   };
 
   const checkServer = () => {
     http.get('http://localhost:3000', () => {
+      console.log("Server ready, loading app");
       loadApp();
     }).on('error', () => {
+      console.log("Waiting for server...");
       setTimeout(checkServer, 500);
     });
   };
@@ -39,4 +43,19 @@ function createWindow() {
   checkServer();
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+});
+
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});
